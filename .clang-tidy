@@ -1,0 +1,51 @@
+# Filter which files to check. This is crucial to avoid getting warnings
+# from system headers or third-party libraries.
+HeaderFilterRegex: '(src)/.*'
+
+Checks:
+    -*, bugprone-*, clang-analyzer-*, concurrency-*, cppcoreguidelines-*,
+    modernize-*,    performance-*, portability-*, readability-*, misc-*,
+    -readability-identifier-length, -readability-braces-around-statements, -modernize-use-nodiscard,
+    -performance-avoid-endl, -cppcoreguidelines-pro-bounds-pointer-arithmetic,
+    -cppcoreguidelines-avoid-non-const-global-variables, -*-magic-numbers,
+    -misc-non-private-member-variables-in-classes, -misc-use-anonymous-namespace,
+    -bugprone-easily-swappable-parameters, -modernize-use-trailing-return-type,
+    -cppcoreguidelines-special-member-functions, -readability-implicit-bool-conversion,
+    -bugprone-casting-through-void, -cppcoreguidelines-pro-type-cstyle-cast,
+    -cppcoreguidelines-pro-type-vararg, -cppcoreguidelines-avoid-do-while,
+    -readability-function-cognitive-complexity,
+    -cppcoreguidelines-non-private-member-variables-in-classes,
+    -cppcoreguidelines-pro-type-reinterpret-cast, -modernize-use-ranges,
+    -readability-uppercase-literal-suffix, -readability-avoid-nested-conditional-operator,
+    -readability-isolate-declaration
+
+CheckOptions:
+    #===========================================================================
+    # Naming convention
+    #===========================================================================
+    # Structs / classes / enums are CamelCase
+    readability-identifier-naming.ClassCase: 'CamelCase'
+    readability-identifier-naming.StructCase: 'CamelCase'
+    readability-identifier-naming.EnumCase: 'CamelCase'
+
+    # Constants are UPPER_CASE
+    readability-identifier-naming.StaticConstantCase: 'UPPER_CASE'
+    readability-identifier-naming.GlobalConstantCase: 'UPPER_CASE'
+    readability-identifier-naming.EnumConstantCase: 'UPPER_CASE'
+    readability-identifier-naming.ConstexprVariableCase: 'UPPER_CASE'
+
+    # Namespace / functions / variables are lower_case
+    readability-identifier-naming.NamespaceCase: 'lower_case'
+    readability-identifier-naming.FunctionCase: 'lower_case'
+    readability-identifier-naming.VariableCase: 'lower_case'
+    readability-identifier-naming.ParameterCase: 'lower_case'
+    readability-identifier-naming.MemberCase: 'lower_case'
+
+    # Private member variables are 'm_' prefixed (eg. m_private_var)
+    readability-identifier-naming.PrivateMemberPrefix: 'm_'
+
+    # Misc.
+    # "template <typename KeyType, typename ValueType>"
+    readability-identifier-naming.TemplateTypeParameterCase: 'CamelCase'
+    # "using MyTypeAlias = my_structure;"
+    readability-identifier-naming.TypeAliasCase: 'CamelCase'

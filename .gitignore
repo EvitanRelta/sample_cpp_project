@@ -1,0 +1,16 @@
+build/
+/build.*/
+/.vscode/
+/.cache/
+Testing/
+
+*.temp.*
+temp.*
+*.temp
+temp
+
+.env
+
+.opencode/
+
+*.tar.gz
