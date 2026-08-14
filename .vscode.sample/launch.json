@@ -1,35 +1,35 @@
 {
-  "version": "0.2.0",
-  "configurations": [
-    {
-      "name": "Debug: Linux Debug (GDB)",
-      "type": "cppdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}/build/bin/sample_cpp_project",
-      "args": [],
-      "cwd": "${workspaceFolder}",
-      "stopAtEntry": false,
-      "externalConsole": false,
-      "MIMode": "gdb",
-      "setupCommands": [
+    "version": "0.2.0",
+    "configurations": [
         {
-          "description": "Enable pretty-printing for GDB",
-          "text": "-enable-pretty-printing",
-          "ignoreFailures": true
+            "name": "Debug: Linux Debug (GDB)",
+            "type": "cppdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}/build/bin/sample_cpp_project",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "MIMode": "gdb",
+            "setupCommands": [
+                {
+                    "description": "Enable pretty-printing for GDB",
+                    "text": "-enable-pretty-printing",
+                    "ignoreFailures": true
+                }
+            ],
+            "preLaunchTask": "CMake: Build Linux Debug"
+        },
+        {
+            "name": "Debug: Windows MSVC Debug (cppvsdbg)",
+            "type": "cppvsdbg",
+            "request": "launch",
+            "program": "${workspaceFolder}\\build\\bin\\sample_cpp_project.exe",
+            "args": [],
+            "cwd": "${workspaceFolder}",
+            "stopAtEntry": false,
+            "externalConsole": false,
+            "preLaunchTask": "CMake: Build Windows MSVC Debug"
         }
-      ],
-      "preLaunchTask": "CMake: Build Linux Debug"
-    },
-    {
-      "name": "Debug: Windows MSVC Debug (cppvsdbg)",
-      "type": "cppvsdbg",
-      "request": "launch",
-      "program": "${workspaceFolder}\\build\\bin\\sample_cpp_project.exe",
-      "args": [],
-      "cwd": "${workspaceFolder}",
-      "stopAtEntry": false,
-      "externalConsole": false,
-      "preLaunchTask": "CMake: Build Windows MSVC Debug"
-    }
-  ]
+    ]
 }

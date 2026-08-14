@@ -1,32 +1,32 @@
 {
-  // Use clangd for language services while retaining Microsoft C/C++ debugging.
-  "C_Cpp.intelliSenseEngine": "disabled",
-  "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}/build"],
+    // Use clangd for language services while retaining Microsoft C/C++ debugging.
+    "C_Cpp.intelliSenseEngine": "disabled",
+    "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}/build"],
 
-  "[cpp]": {
-    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-  },
-  "[c]": {
-    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-  },
-  "[cuda-cpp]": {
-    "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-  },
-  "[cmake]": {
-    "editor.defaultFormatter": "cheshirekow.cmake-format"
-  },
-  "[toml]": {
-    "editor.defaultFormatter": "tamasfe.even-better-toml"
-  },
-  "editor.defaultFormatter": "esbenp.prettier-vscode",
-  "editor.formatOnSave": true,
-  "prettier.ignorePath": ".gitignore",
+    "[cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "[c]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "[cuda-cpp]": {
+        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
+    },
+    "[cmake]": {
+        "editor.defaultFormatter": "cheshirekow.cmake-format"
+    },
+    "[toml]": {
+        "editor.defaultFormatter": "tamasfe.even-better-toml"
+    },
+    "editor.defaultFormatter": "esbenp.prettier-vscode",
+    "editor.formatOnSave": true,
+    "prettier.ignorePath": ".gitignore",
 
-  "cmake.useCMakePresets": "always",
-  "cmake.configureOnOpen": false,
-  "editor.rename.enablePreview": false,
-  "editor.inlayHints.enabled": "offUnlessPressed",
-  "files.associations": {
-    ".clang-*": "yaml"
-  }
+    "cmake.useCMakePresets": "always",
+    "cmake.configureOnOpen": false,
+    "editor.rename.enablePreview": false,
+    "editor.inlayHints.enabled": "offUnlessPressed",
+    "files.associations": {
+        ".clang-*": "yaml"
+    }
 }
