@@ -1,32 +1,28 @@
 {
-    // Use clangd for language services while retaining Microsoft C/C++ debugging.
+    // Disable intellisense for Microsoft C/C++ extension (replaced by Clangd),
+    // but leaving its debugger
     "C_Cpp.intelliSenseEngine": "disabled",
-    "clangd.arguments": ["--compile-commands-dir=${workspaceFolder}/build"],
 
-    "[cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-    },
-    "[c]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-    },
-    "[cuda-cpp]": {
-        "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd"
-    },
-    "[cmake]": {
-        "editor.defaultFormatter": "cheshirekow.cmake-format"
-    },
-    "[toml]": {
-        "editor.defaultFormatter": "tamasfe.even-better-toml"
-    },
+    // Format cpp files using Clangd
+    "[cpp]": { "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd" },
+    "[c]": { "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd" },
+    "[cuda-cpp]": { "editor.defaultFormatter": "llvm-vs-code-extensions.vscode-clangd" },
+
+    // Format cmake files using cmake-format
+    "[cmake]": { "editor.defaultFormatter": "cheshirekow.cmake-format" },
+
+    // Format TOML files using "Even Better TOML"
+    "[toml]": { "editor.defaultFormatter": "tamasfe.even-better-toml" },
+
+    // Format all other files using Prettier
     "editor.defaultFormatter": "esbenp.prettier-vscode",
-    "editor.formatOnSave": true,
     "prettier.ignorePath": ".gitignore",
 
-    "cmake.useCMakePresets": "always",
-    "cmake.configureOnOpen": false,
-    "editor.rename.enablePreview": false,
-    "editor.inlayHints.enabled": "offUnlessPressed",
-    "files.associations": {
-        ".clang-*": "yaml"
-    }
+    // Misc.
+    "editor.formatOnSave": true,
+    "cmake.useCMakePresets": "always", // force CMake Tools to use CMakePresets.json / CMakeUserPresets.json
+    "cmake.configureOnOpen": false, // prevent CMake Tools from prompting every startup
+    "editor.rename.enablePreview": false, // disable refactor preview (apply renames directly)
+    "editor.inlayHints.enabled": "offUnlessPressed", // show inlay parameter hints only while holding Ctrl+Alt / Cmd+Option
+    "files.associations": { ".clang-*": "yaml" } // fixes VSCode not detecting clang config files as YAML as YAML
 }
