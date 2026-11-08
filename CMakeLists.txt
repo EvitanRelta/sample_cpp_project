@@ -12,6 +12,10 @@ endif()
 
 option(SAMPLE_CPP_PROJECT_BUILD_EXTRAS "Build extra executables" ON)
 
+find_package(OpenCV 4.5 REQUIRED)
+message(
+    STATUS "Found OpenCV VERSION: ${OpenCV_VERSION} at ${OpenCV_INCLUDE_DIRS}")
+
 set(FRAME_VIEWER_BUILD_DEMOS
     OFF
     CACHE BOOL "" FORCE)
@@ -38,6 +42,9 @@ list(REMOVE_ITEM SAMPLE_CPP_PROJECT_LIBRARY_SOURCES
 add_library(sample_cpp_project_lib STATIC ${SAMPLE_CPP_PROJECT_LIBRARY_SOURCES})
 target_include_directories(sample_cpp_project_lib
                            PUBLIC "${CMAKE_CURRENT_SOURCE_DIR}/src")
+target_include_directories(sample_cpp_project_lib SYSTEM
+                           PUBLIC ${OpenCV_INCLUDE_DIRS})
+target_link_libraries(sample_cpp_project_lib PUBLIC ${OpenCV_LIBS})
 sample_cpp_project_configure_target(sample_cpp_project_lib)
 
 add_executable(sample_cpp_project src/main.cpp)
