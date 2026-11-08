@@ -12,6 +12,14 @@ endif()
 
 option(SAMPLE_CPP_PROJECT_BUILD_EXTRAS "Build extra executables" ON)
 
+set(FRAME_VIEWER_BUILD_DEMOS
+    OFF
+    CACHE BOOL "" FORCE)
+set(FRAME_VIEWER_BUILD_TESTS
+    OFF
+    CACHE BOOL "" FORCE)
+add_subdirectory(third_party/frame_viewer)
+
 function(sample_cpp_project_configure_target target_name)
     target_compile_features("${target_name}" PRIVATE cxx_std_20)
     set_target_properties(

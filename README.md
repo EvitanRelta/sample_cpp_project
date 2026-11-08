@@ -13,6 +13,8 @@ used unchanged.
 - `extras/CMakeLists.txt` discovers and configures those extra executables.
 - `third_party/include/CLI11.hpp` contains the vendored CLI11 v2.6.2 header used by the main
   application.
+- `third_party/frame_viewer/` contains the vendored Qt 5/OpenCV viewer, including its docs, demos,
+  and tests. See [third-party libraries](third_party/README.md) for provenance and doc links.
 - `.vscode.sample/` contains optional VS Code build tasks and GDB launch settings.
 
 The project library is linked into the final executables. It is not a runtime file that must be
@@ -20,11 +22,24 @@ distributed beside them.
 
 ## Build
 
+On Ubuntu, install the build tools and viewer dependencies:
+
+```sh
+sudo apt install build-essential cmake qtbase5-dev libopencv-dev
+```
+
 From the project root, configure and build (defaults to a Debug build):
 
 ```sh
 cmake -B build
-cmake --build build
+cmake --build build --parallel 1
+```
+
+The `frame_viewer` CMake target is available; its standalone demos and tests are disabled.
+Link it to any target that uses the viewer, for example:
+
+```cmake
+target_link_libraries(sample_cpp_project PRIVATE frame_viewer)
 ```
 
 Run the application:
