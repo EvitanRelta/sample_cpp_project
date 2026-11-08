@@ -13,19 +13,18 @@ used unchanged.
 - `extras/CMakeLists.txt` discovers and configures those extra executables.
 - `third_party/include/CLI11.hpp` contains the vendored CLI11 v2.6.2 header used by the main
   application.
-- `CMakePresets.json` provides Linux/GCC-compatible and Windows/MSVC debug presets using Ninja.
-- `.vscode.sample/` contains optional Linux/GDB and Windows/MSVC editor tasks and launch settings.
+- `.vscode.sample/` contains optional VS Code build tasks and GDB launch settings.
 
 The project library is linked into the final executables. It is not a runtime file that must be
 distributed beside them.
 
-## Linux
+## Build
 
-From the project root, configure and build the debug preset:
+From the project root, configure and build (defaults to a Debug build):
 
 ```sh
-cmake --preset linux-debug
-cmake --build --preset linux-debug
+cmake -B build
+cmake --build build
 ```
 
 Run the application:
@@ -33,24 +32,6 @@ Run the application:
 ```sh
 ./build/bin/sample_cpp_project --name Ada
 ```
-
-The Linux and Windows presets both use `build/`. When switching platforms in the same checkout,
-delete `build/` before configuring the other preset because an existing CMake build tree cannot be
-reused with a different platform or compiler.
-
-## Visual Studio 2022 Toolchain
-
-On Windows, run the following from a regular Command Prompt:
-
-```bat
-build_vs2022.bat
-```
-
-The script locates Visual Studio 2022, initializes its x64 compiler environment, configures the
-`windows-msvc-debug` Ninja preset, and builds `build\bin\sample_cpp_project.exe`. The CMake targets
-use the static MSVC runtime, CLI11 is header-only, and `sample_cpp_project_lib` is a static library,
-so no project DLL or separate project-library file is needed beside the executable. Normal Windows
-system components are still provided by the target machine.
 
 ## VS Code
 
@@ -60,15 +41,8 @@ Copy the sample directory before opening the project in VS Code:
 cp -r .vscode.sample .vscode
 ```
 
-On Windows Command Prompt, the equivalent is:
-
-```bat
-xcopy .vscode.sample .vscode\ /E /I
-```
-
-The copied configuration supplies configure, build, and debug entries for Linux with GDB and Windows
-with the Visual Studio debugger. If the application target or output path changes, update the
-`program` entries in `.vscode/launch.json` and the related preset names in `.vscode/tasks.json`.
+The copied configuration supplies configure, build, and GDB debug entries. If the application
+target or output path changes, update the `program` entry in `.vscode/launch.json`.
 
 ## Extras
 
@@ -76,15 +50,13 @@ Extras are enabled by default. Every recursively discovered `extras/*.cpp` file 
 one `main()`. Relative paths are flattened with underscores for internal CMake target names, and
 paths that flatten to the same target name are rejected during configuration. Output paths retain
 the source layout: `extras/sample_extra.cpp` produces `build/extras/sample_extra`, while
-`extras/admin/check.cpp` produces `build/extras/admin/check` (with `.exe` on Windows).
+`extras/admin/check.cpp` produces `build/extras/admin/check`.
 
 Disable all extra executables while configuring with:
 
 ```sh
-cmake --preset linux-debug -DSAMPLE_CPP_PROJECT_BUILD_EXTRAS=OFF
+cmake -B build -DSAMPLE_CPP_PROJECT_BUILD_EXTRAS=OFF
 ```
-
-Use the same option with `windows-msvc-debug` on Windows.
 
 ## Formatting
 
@@ -94,14 +66,14 @@ Run the configured formatters from the project root:
 find src -type f \( -name '*.cpp' -o -name '*.h' \) -exec clang-format -i {} +
 find extras -type f -name '*.cpp' -exec clang-format -i {} +
 cmake-format -i CMakeLists.txt extras/CMakeLists.txt
-prettier --write README.md CMakePresets.json .vscode.sample/*.json
+prettier --write README.md .vscode.sample/*.json
 ```
 
 ## Adaptation Checklist
 
 1. Search for `sample_cpp_project` and replace the CMake project name, application target,
    `sample_cpp_project_lib`, `sample_cpp_project_configure_target`, extra-target prefix, source
-   namespace, batch output name, and VS Code launch paths as appropriate.
+   namespace, and VS Code launch path as appropriate.
 2. Search for the uppercase prefix `SAMPLE_CPP_PROJECT`. Rename `SAMPLE_CPP_PROJECT_BUILD_EXTRAS`,
    `SAMPLE_CPP_PROJECT_LIBRARY_SOURCES`, and `SAMPLE_CPP_PROJECT_EXTRA_SOURCES` consistently.
 3. Replace `src/greeting.h`, `src/greeting.cpp`, `make_greeting`, and the `sample_cpp_project`
@@ -109,10 +81,8 @@ prettier --write README.md CMakePresets.json .vscode.sample/*.json
    library.
 4. Update the CLI description, `-n,--name` option, default value, and application behavior in
    `src/main.cpp`. Update or remove `extras/sample_extra.cpp` for the extras the project needs.
-5. Rename the `linux-debug` and `windows-msvc-debug` presets if desired, then update matching names
-   in `build_vs2022.bat` and `.vscode.sample/tasks.json`.
-6. If output directories or executable names change, update `build_vs2022.bat` and both `program`
-   paths in `.vscode.sample/launch.json`.
-7. Keep `third_party/include/CLI11.hpp` and its include path if CLI11 is still used. If the `src/`,
+5. If output directories or executable names change, update the `program` path in
+   `.vscode.sample/launch.json`.
+6. Keep `third_party/include/CLI11.hpp` and its include path if CLI11 is still used. If the `src/`,
    `extras/`, or `third_party/include/` layout changes, update the corresponding paths in the CMake
    files.

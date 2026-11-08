@@ -20,7 +20,6 @@
 
     // Misc.
     "editor.formatOnSave": true,
-    "cmake.useCMakePresets": "always", // force CMake Tools to use CMakePresets.json / CMakeUserPresets.json
     "cmake.configureOnOpen": false, // prevent CMake Tools from prompting every startup
     "editor.rename.enablePreview": false, // disable refactor preview (apply renames directly)
     "editor.inlayHints.enabled": "offUnlessPressed", // show inlay parameter hints only while holding Ctrl+Alt / Cmd+Option
