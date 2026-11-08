@@ -14,7 +14,7 @@ if(NOT CMAKE_CONFIGURATION_TYPES)
                                                  RelWithDebInfo MinSizeRel)
 endif()
 
-option(SAMPLE_CPP_PROJECT_BUILD_TOOLS "Build tool executables" ON)
+option(SAMPLE_CPP_PROJECT_BUILD_EXTRAS "Build extra executables" ON)
 
 function(sample_cpp_project_configure_target target_name)
     target_compile_features("${target_name}" PRIVATE cxx_std_20)
@@ -44,6 +44,6 @@ target_include_directories(
 target_link_libraries(sample_cpp_project PRIVATE sample_cpp_project_lib)
 sample_cpp_project_configure_target(sample_cpp_project)
 
-if(SAMPLE_CPP_PROJECT_BUILD_TOOLS)
-    add_subdirectory(tools)
+if(SAMPLE_CPP_PROJECT_BUILD_EXTRAS)
+    add_subdirectory(extras)
 endif()
