@@ -1,4 +1,4 @@
-// ui_thread.h — the hidden thread that owns the QApplication and every viewer window.
+/** Owns the hidden thread that runs the QApplication and every viewer window. */
 #pragma once
 
 #include <functional>
@@ -11,47 +11,52 @@ class QWidget;
 
 namespace fv::detail {
 
-class ui_thread {
-public:
-    // Starts the UI thread on first call; it is stopped when the program exits.
-    static ui_thread& instance();
+class UiThread {
+   public:
+    /** Start the UI thread on first call; it is stopped when the program exits. */
+    static UiThread& instance();
 
-    // Runs fn on the UI thread (asynchronously, in posting order). Any thread.
+    /** Run fn on the UI thread (asynchronously, in posting order). Any thread. */
     void post(std::function<void()> fn);
 
-    // Runs fn on the UI thread and waits for it to finish. Any thread (runs inline on the UI thread).
+    /**
+     * Run fn on the UI thread and wait for it to finish. Any thread (runs inline on the UI
+     * thread).
+     */
     void post_and_wait(std::function<void()> fn);
 
-    bool on_ui_thread() const { return std::this_thread::get_id() == thread_.get_id(); }
+    bool on_ui_thread() const { return std::this_thread::get_id() == m_thread.get_id(); }
 
-    // Viewer bookkeeping. When the last viewer goes away, an exit hook is registered so the UI
-    // thread is shut down at program exit *before* Qt's own global objects are destroyed.
+    /**
+     * Track live viewers. When the last viewer goes away, an exit hook is registered so the UI
+     * thread is shut down at program exit *before* Qt's own global objects are destroyed.
+     */
     void viewer_created();
     void viewer_destroyed();
 
-    // Stops the event loop and joins the thread. Idempotent.
+    /** Stop the event loop and join the thread. Idempotent. */
     void shutdown();
 
-    // UI thread only: track windows so any left over are deleted on the UI thread at exit.
-    void register_widget(QWidget* w) { widgets_.insert(w); }
-    void unregister_widget(QWidget* w) { widgets_.erase(w); }
+    /** Track windows so any left over are deleted on the UI thread at exit. UI thread only. */
+    void register_widget(QWidget* w) { m_widgets.insert(w); }
+    void unregister_widget(QWidget* w) { m_widgets.erase(w); }
 
-    ui_thread(const ui_thread&) = delete;
-    ui_thread& operator=(const ui_thread&) = delete;
+    UiThread(const UiThread&) = delete;
+    UiThread& operator=(const UiThread&) = delete;
 
-private:
-    ui_thread();
-    ~ui_thread();
+   private:
+    UiThread();
+    ~UiThread();
     void run(std::function<void()> on_ready);
 
     static void shutdown_at_exit();
 
-    std::thread thread_;
-    std::mutex live_mutex_;
-    int live_viewers_ = 0;
-    std::mutex mutex_;
-    QApplication* app_ = nullptr; // guarded by mutex_
-    std::set<QWidget*> widgets_;  // UI thread only
+    std::thread m_thread;
+    std::mutex m_live_mutex;
+    int m_live_viewers = 0;
+    std::mutex m_mutex;
+    QApplication* m_app = nullptr;  // guarded by m_mutex
+    std::set<QWidget*> m_widgets;   // UI thread only
 };
 
-} // namespace fv::detail
+}  // namespace fv::detail

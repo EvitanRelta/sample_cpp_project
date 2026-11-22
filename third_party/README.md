@@ -10,7 +10,7 @@ Contains code that originated elsewhere (e.g. libraries).
 
     Repo link: https://gitlab.com/evitanrelta/frame_viewer
 
-    Vendored revision: `b0ce534c0e50f609431726e5b10dee921098cfa6`
+    Vendored revision: `6eadb306aaaf64b10e5e46148efb8a074fbf3511`
 
     Docs: [README](frame_viewer/README.md), [development notes](frame_viewer/DEVELOPMENT.md),
     [API reference](frame_viewer/include/fv/viewer.h).

@@ -1,0 +1,6 @@
+BasedOnStyle: Chromium
+IndentWidth: 4
+ColumnLimit: 100
+LineEnding: LF
+InsertNewlineAtEOF: true
+AllowShortIfStatementsOnASingleLine: true

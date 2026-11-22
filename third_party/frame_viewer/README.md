@@ -46,6 +46,49 @@ int main() {
 
 The full API is documented in `include/fv/viewer.h`.
 
+For frame-attached boxes with labels, submit them with the image:
+
+```cpp
+fv::Box box;
+box.rect = cv::Rect2d(100, 80, 200, 150); // image pixel coordinates
+box.label = "box 1";
+viewer.show(frame, {box}); // or show_shared(frame, {box}) with a pooled buffer
+```
+
+Each submission replaces the previous boxes; `show(frame)` clears them. Images and boxes stay
+synchronized, and outlines and labels keep their screen size during zoom/pan. For persistent
+annotations independent of frame updates, use `set_overlay_box()` / `set_overlay_polygon()` /
+`set_overlay_text()`. Overlay boxes take the same `fv::Box` in world coordinates, so they can label
+regions spanning several `set_frame()` frames:
+
+```cpp
+viewer.set_overlay_box("target_7", {world_rect, colour, 2, "7"});
+viewer.remove_overlay("target_7");
+```
+
+To change frames and overlays together, wrap the calls in `batch()`. No paint shows only some
+of the changes. Inside a batch, `show()` / `set_frame()` still copy when called, so you can reuse
+your buffer right away. Getters such as `current_viewport()` return the state from before the
+batch until it ends.
+
+```cpp
+viewer.batch([&] {
+    viewer.set_frame_shared(0, buf, world_rect);
+    viewer.set_overlay_box("target_7", {world_rect, colour, 2, "7"});
+});
+```
+
+`show_fps()` draws a readout of `stats()`: submitted / drawn / replaced rates, and paint time and
+latency. Call `stats()` to use the numbers yourself. For example, pass a BGR colour to
+`set_overlay_text()` to show a warning line when frames are being replaced (see `demo_simple`).
+
+Frames placed with `set_frame()` can be rotated about their rect centre (degrees, clockwise on
+screen). Frames below stay visible around a rotated frame:
+
+```cpp
+viewer.set_frame(id, image, cv::Rect2d(100, 50, 640, 480), /*layer=*/1, /*angle_deg=*/30.0);
+```
+
 Built-in controls in every window: mouse wheel to zoom at the cursor, Ctrl + left drag to pan,
 Ctrl `+` / Ctrl `-` to zoom, Ctrl+0 to fit, Ctrl+H for help, Esc twice to close.
 
@@ -76,19 +119,22 @@ Ctrl `+` / Ctrl `-` to zoom, Ctrl+0 to fit, Ctrl+H for help, Esc twice to close.
 - **Performance.** Cost scales with the window size, not the frame size. Frames are never
   queued: the newest is drawn and older ones are skipped. Continuously changing frames (video)
   are shrunk with a fast method that can alias fine detail; the last frame is redrawn in full
-  quality about half a second after the stream stops.
+  quality about half a second after the stream stops. Rotated frames take several times longer
+  to draw than unrotated ones.
 
 ## Demos
 
 | Executable | Shows |
 | --- | --- |
-| `build/bin/demo_simple` | `imshow`-style loop, FPS overlay, zoom and pan, auto-fit on resize |
+| `build/bin/demo_simple` | `imshow`-style loop, stats readout and coloured `stats()` line, zoom and pan, auto-fit on resize |
 | `build/bin/demo_keys` | `bind()`, keys returned by `wait_key()`, mouse clicks, viewport callback |
 | `build/bin/demo_multi` | two threads, each with its own window |
 | `build/bin/demo_mosaic` | stitched multi-resolution mosaic: low-res overview, sharper tiles where visible |
 | `build/bin/demo_big_frame` | streaming large frames with `show_shared()` + `fv::BufferPool` (`--size 4k\|5k\|8k\|WxH`, `--fps N`, `--copy`) |
-| `build/bin/demo_roi` | draw, move and resize ROI boxes with `set_overlay_rect()` |
-| `build/bin/demo_canvas` | drag images and shapes around a canvas with `move_frame()` |
+| `build/bin/demo_roi` | draw, move and resize ROI boxes with `set_overlay_box()` |
+| `build/bin/demo_polygon` | click polygons with `set_overlay_polygon()`, save them as a bitmask (Ctrl+S) |
+| `build/bin/demo_canvas` | drag and rotate (Q/E) images and shapes on a canvas with `move_frame()` |
+| `build/bin/demo_boxes` | moving frame-attached boxes and labels, plus overlay boxes across the image edge; B toggles boxes, L toggles labels |
 
 ## WSL
 

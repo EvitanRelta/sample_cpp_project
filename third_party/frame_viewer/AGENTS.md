@@ -21,8 +21,10 @@ src/ui_thread.*         hidden QApplication thread
 src/view_widget.*       the window: input, camera, painting, overlays, help
 src/compositor.*        frames + camera -> screen image (pure OpenCV)
 src/key_utils.*         key normalisation and parsing
-demos/, tests/          one executable per use case; test_show_shared
+demos/, tests/          one executable per use case; test_show_shared, test_frame_boxes, test_batch
 ```
+
+`test_show_shared` needs a display; run `test_frame_boxes` and `test_batch` with `QT_QPA_PLATFORM=offscreen`.
 
 ## Invariants
 
@@ -38,3 +40,15 @@ demos/, tests/          one executable per use case; test_show_shared
 
 - Keep `viewer.h` comments in sync with behaviour; they are the API reference.
 - README is user-facing; internals go in `DEVELOPMENT.md` or code comments.
+
+## Formatting
+
+Once you're done editing CMake or C/C++ files, format them by running:
+
+```sh
+cmake-format -i dir1/CMakeLists.txt dir2/CMakeLists.txt
+clang-format -i dir1/file.cpp dir2/file.cpp
+```
+
+Assume these 2 formatting tools are present, no need to check them before using.
+If those tools are not present, skip formatting.

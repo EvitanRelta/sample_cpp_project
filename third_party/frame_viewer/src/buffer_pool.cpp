@@ -1,15 +1,15 @@
-#include "fv/viewer.h"
-
 #include <algorithm>
 #include <chrono>
 #include <cstdio>
 #include <thread>
+#include "fv/viewer.h"
 
 namespace fv {
 
 BufferPool::BufferPool(cv::Size size, int type, int initial_count, int max_count)
     : m_size(size), m_type(type), m_max_count(std::max(max_count, std::max(initial_count, 1))) {
-    for (int i = 0; i < std::max(initial_count, 1); ++i) m_buffers.emplace_back(m_size, m_type);
+    for (int i = 0; i < std::max(initial_count, 1); ++i)
+        m_buffers.emplace_back(m_size, m_type);
 }
 
 bool BufferPool::is_free(const cv::Mat& buffer) {
@@ -30,7 +30,7 @@ cv::Mat BufferPool::acquire() {
                 const std::size_t i = (m_next + k) % n;
                 if (is_free(m_buffers[i])) {
                     m_next = (i + 1) % n;
-                    return m_buffers[i]; // shallow copy: the caller's header marks it busy
+                    return m_buffers[i];  // shallow copy: the caller's header marks it busy
                 }
             }
             if (static_cast<int>(n) < m_max_count) {
@@ -40,10 +40,11 @@ cv::Mat BufferPool::acquire() {
         }
         if (!warned) {
             warned = true;
-            std::fprintf(stderr,
-                         "fv::BufferPool: all %d buffers are in use; waiting. Are you holding on to "
-                         "buffers from acquire()?\n",
-                         m_max_count);
+            std::fprintf(
+                stderr,
+                "fv::BufferPool: all %d buffers are in use; waiting. Are you holding on to "
+                "buffers from acquire()?\n",
+                m_max_count);
         }
         std::this_thread::sleep_for(std::chrono::milliseconds(1));
     }
@@ -54,4 +55,4 @@ int BufferPool::buffer_count() const {
     return static_cast<int>(m_buffers.size());
 }
 
-} // namespace fv
+}  // namespace fv
